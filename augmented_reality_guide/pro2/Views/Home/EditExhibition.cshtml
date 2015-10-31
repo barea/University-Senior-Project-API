@@ -1,0 +1,48 @@
+﻿@model pro2.Models.Exhibition
+
+@{
+    ViewBag.Title = "EditExhibition";
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript" src="@Url.Content("~/Scripts/knockout-2.2.0.js")"></script>
+    <script type="text/javascript">
+  
+        function ExhViewModel() {
+            var self = this;
+            self.exhibitions = ko.observableArray();
+            var baseUri = '@ViewBag.ApiUrl';
+            var Id =  '@ViewBag.ExhId';
+            self.update = function (exhibition) {
+                $.ajax({ type: "PUT", url: baseUri + '/' + Id.toString(), data: exhibition })
+                .done(function () { alert("!تم التعديل بنجاح") });
+            }
+            $.getJSON(baseUri + '/' + Id.toString(), self.exhibitions);
+        }
+        $(document).ready(function () {
+            ko.applyBindings(new ExhViewModel());
+        })
+    </script>
+}
+
+<div class="content">
+    <div class="float-right">
+        <ul  data-bind="foreach: exhibitions">
+            <li>
+
+                <div class="float-right">
+                    <div class="float-right">:الاسم</div>
+                    <div><input type="text" data-bind="value: $data.Name" /></div>
+                </div>
+                <br />
+                <div class="float-right">
+                    <input type="button" value="تحديث" class="float-right" data-bind="click: $root.update" />
+                </div>
+                <br />
+                <div>
+                    @Html.ActionLink("عودة الى قائمة المعارض", "Exhibition")
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

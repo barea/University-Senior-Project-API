@@ -1,0 +1,58 @@
+﻿@model pro2.Models.Objct
+
+@{
+    ViewBag.Title = "IndexObject";
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript" src="@Url.Content("~/Scripts/knockout-2.2.0.js")"></script>
+    <script type="text/javascript">
+        // View-model will go here
+        function ObjctViewModel() {
+
+            var self = this;
+            self.objcts = ko.observableArray();
+
+            var actUri = '@ViewBag.ActUrl';
+            $.getJSON(actUri, self.objcts);
+        }
+        $(document).ready(function () {
+            ko.applyBindings(new ObjctViewModel());
+        })
+    </script>
+        }
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <div class="float-right">
+                <img src="@Url.Content("~/Images/qrcode.jpeg")" alt="image" width="100" height="100" />
+            </div>
+
+            <br />
+            <hgroup class="title">
+                <h1>الدليل الافتراضي القائم على استخدام الصور</h1>
+                لتحميل التطبيق الخاص بنظام الاندرويد اضغط
+                @Html.ActionLink("هنا", "Download")
+            </hgroup>
+           
+        </div>
+    </section>
+}
+
+
+   <h3 class="float-right">:قائمة المعروضات</h3>
+
+    <div class="float-right">
+        <ul id="prod" data-bind="foreach: objcts">
+            <li class="float-right">
+
+                
+                <div>
+                    <h4><span data-bind="text: $data.Name" class="float-right" /></h4>
+                </div>
+
+                <textarea id="TextArea1" rows="6" cols="300" data-bind="text: $data.Description" readonly="readonly" ></textarea>
+            </li>
+         </ul>
+    
+

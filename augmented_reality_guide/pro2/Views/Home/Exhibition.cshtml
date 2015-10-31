@@ -1,0 +1,82 @@
+﻿@model pro2.Models.Exhibition
+
+@{
+    ViewBag.Title = "Exhibition";
+}@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript" src="@Url.Content("~/Scripts/knockout-2.2.0.js")"></script>
+    <script type="text/javascript">
+
+        function ExhibitionsViewModel()
+        {
+            var self = this;
+            self.exhibitions = ko.observableArray();
+
+            var baseUri = '@ViewBag.ApiUrl';
+
+            self.create = function(formElement)
+            {
+                $(formElement).validate();
+                if($(formElement).valid())
+                {
+                    $.post(baseUri, $(formElement).serialize(), null, "json").done(function (o) { self.exhibitions.push(o) });
+                }
+            }
+
+
+
+            $.getJSON(baseUri, self.exhibitions);
+
+        }
+
+
+    $(document).ready(function () {
+        ko.applyBindings(new ExhibitionsViewModel());
+    });
+
+    </script>
+}
+
+<div class="float-right">
+    <h2 class="float-right">:إضافة معرض جديد</h2>
+    <br />
+    <br />
+    <form data-bind="submit: create" class="float-right">
+        @Html.ValidationSummary(true)
+        <fieldset class="float-right">
+            <legend>Contact</legend>
+
+            <div class="float-right">
+                <div class="float-right">
+                    @Html.Label(":الاسم")
+                </div>
+
+                <div>
+                    @Html.EditorFor(model => model.Name)
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+                </div>
+                <p>
+                    <input type="submit" value="حفظ" class="float-right" onclick="location.reload(true)" />
+                </p>
+</fieldset>
+    </form>
+</div>
+
+
+<div class="float-right">
+        <hr />
+            <ul id="products" data-bind="foreach: exhibitions">
+                <li class="float-right">
+
+                    <a data-bind="attr : {'href': '@Url.Action("Objct", "home")/' + Id } "><span data-bind="text: $data.Name" class="float-right" /></a>
+                    <a data-bind="attr : {'href': '@Url.Action("EditExhibition", "home")/' + Id } " class="float-left">   تعديل</a>
+                </li>
+            </ul>
+        </div>
+   
+
+
+
+
+

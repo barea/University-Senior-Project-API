@@ -1,0 +1,61 @@
+﻿@model pro2.Models.Objct
+
+@{
+    ViewBag.Title = "ManageObject";
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript" src="@Url.Content("~/Scripts/knockout-2.2.0.js")"></script>
+    <script type="text/javascript">
+
+    function ObjViewModel() {
+        var self = this;
+        self.objects = ko.observableArray();
+        var baseUri = '@ViewBag.ApiUrl';
+        var Id = '@ViewBag.ObjId';
+            self.update = function (object) {
+                $.ajax({ type: "PUT", url: baseUri + '/' + Id.toString(), data: object })
+                .done(function () { alert(":تم التعديل بنجاح") });
+            }
+
+            self.remove = function (object) {
+                // First remove from the server, then from the UI
+                $.ajax({ type: "DELETE", url: baseUri + '/' + Id.toString() })
+                    .done(function () { self.objects.remove(object); alert(":تم الحذف بنجاح"); });
+            }
+
+            $.getJSON(baseUri + '/' + Id.toString(), self.objects);
+        }
+        $(document).ready(function () {
+            ko.applyBindings(new ObjViewModel());
+        })
+    </script>
+}
+
+<div class="content">
+    <div class="float-right">
+        <ul  data-bind="foreach: objects">
+            <li>
+                <div class="float-right">
+                    <div class="float-right">:الاسم</div>
+                    <div><input type="text" data-bind="value: $data.Name" /></div>
+                 </div>
+                <br />
+                <div class="float-right">
+                    <div class="float-right">:الوصف</div>
+                    <div><textarea id="TextArea1" rows="6" cols="300" data-bind="value: $data.Description"></textarea></div>
+                 </div>
+                <br />
+                <div class="float-right">
+                    <input type="button" value="تعديل " data-bind="click: $root.update" />
+                    <input type="button" value="حذف  " data-bind="click: $root.remove" />
+                </div>
+                <br />
+                <div >
+                    <a data-bind="attr : {'href': '@Url.Action("Objct", "home")/' + ExhibitionId} " >عودة الى قائمة المعروضات</a>
+                </div>
+            </li>
+
+        </ul>
+    </div>
+</div>
