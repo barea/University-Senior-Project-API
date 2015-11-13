@@ -188,9 +188,7 @@ namespace pro2.Controllers
         //Qr code generate
         public ActionResult QrGenerator(int id)
         {
-            string apiUri = Url.HttpRouteUrl("DefaultApi", new { controller = "objct", });
-            string url = new Uri(Request.Url, apiUri).AbsoluteUri.ToString();
-            string FullUrl = url + "/" + id;
+            string FullUrl = id.ToString();
             string EncrpUrl = cryptUrl(FullUrl);
 
             QRCodeEncoder encoder = new QRCodeEncoder();
